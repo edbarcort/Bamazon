@@ -17,19 +17,23 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId + "\n");
-    start();
+    console.log("Sucessfully connected as id " + connection.threadId + "\n");
+
+    console.log("Hi! Welcome to Bamazon");
+
+    selectProduct();
 });
 
-function start() {
+var selectProduct = function() {
     inquirer
         .prompt({
             name: "selectProductID",
             type: "input",
-            message: "Please, enter the ID of the product you want to look for.",
-            validate: function validateProductID(input) {
-                return input !== 'number';
-            }
+            message: "Enter the ID of the product you want to look for:",
+            validate: function(product_id) {
+                var valid = !isNaN(parseFloat(product_id));
+                return valid || "Please enter a valid Product ID";
+            },
         })
         .then(function(answer) {
             // based on their answer, either call the bid or the post functions
@@ -41,15 +45,16 @@ function start() {
         });
 }
 
-function unitsToBuy() {
+var unitsToBuy = function() {
     inquirer
         .prompt({
             name: "selectProductQuantity",
             type: "input",
-            message: "how many units of the product would you like to buy?",
-            validate: function validateProductQuantity(quantity) {
-                return quantity !== 'number'
-            }
+            message: "How many units of the product would you like to buy?:",
+            validate: function(quantity) {
+                var valid = !isNaN(parseFloat(quantity));
+                return valid || "Please enter a number";
+            },
         })
         .then(function(answer) {
             // based on their answer, either call the bid or the post functions
